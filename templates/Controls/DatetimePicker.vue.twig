@@ -1,0 +1,33 @@
+<script id="vue-datetime-picker" type="text/x-template">
+    <div class="DatetimePicker">
+        {% apply spaceless %}
+            <div class="DatetimePicker_date">
+                <span> le </span>
+                <div class="DatetimePicker_selects">
+                    <select v-model="selectedDay">
+                        <option v-for="day in availableDays">[[ day ]]</option>
+                    </select>
+                    <select v-model="selectedMonth">
+                        <option v-for="month in availableMonths" :value="month">[[ month_name(month) ]]</option>
+                    </select>
+                    <select v-model="selectedYear">
+                        <option v-for="year in availableYears">[[ year ]]</option>
+                    </select>
+                </div>
+            </div>
+            <div v-if="useTime" class="DatetimePicker_time">
+                <span> à </span>
+                <div class="DatetimePicker_selects">
+                    <select v-model="selectedHour">
+                        <option v-for="hour in availableHours" :value="hour">[[ hour.toString().padStart(2, '0') ]]h</option>
+                    </select>
+                    <select v-model="selectedMinute">
+                        <option v-for="minute in availableMinutes" :value="minute">[[ minute.toString().padStart(2, '0') ]]</option>
+                    </select>
+                </div>
+            </div>
+        {% endapply %}
+        <div class="DatetimePicker_warning" v-if="pastDateText && isSelectedDateExpired">[[ pastDateText ]]</div>
+        <div class="DatetimePicker_warning" v-if="futureDateText && isSelectedDateFuture">[[ futureDateText ]]</div>
+    </div>
+</script>

@@ -1,0 +1,26 @@
+<script id="vue-modal" type="text/x-template">
+    <div class="Modal fixed top-0 left-0 h-full w-full overscroll-none">
+        <div class="__Wrapper mx-auto my-8">
+            <div class="__Container w-176 w-10 mx-auto my-8 rounded-md overflow-hidden">
+                <slot name="header">
+                    <div
+                            class="__Header text-2xl bg-primary-500 text-white text-center font-bold py-2 px-12"
+                            :class="'--'+titleStyle"
+                            v-if="titleText"
+                            v-html="titleText"></div>
+                </slot>
+                <div class="__Body form px-8 py-0 bg-white overflow-y-scroll max-h-screen8/10">
+                    <div class="__Content relative min-h-40">
+                        <slot></slot>
+                    </div>
+                    <slot name="footer">
+                        <div class="__Buttons Inputs text-center px-0 py-8 flex justify-center space-x-3" v-if="yesButtonText || noButtonText">
+                            <button :class="yesButtonClass" v-if="yesButtonText" :disabled="!yesButtonEnabled" @click="$emit('clickyes')" v-html="yesButtonText"></button>
+                            <button :class="noButtonClass" v-if="noButtonText" :disabled="!noButtonEnabled" @click="$emit('clickno')" v-html="noButtonText"></button>
+                        </div>
+                    </slot>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

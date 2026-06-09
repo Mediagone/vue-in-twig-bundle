@@ -25,8 +25,8 @@ final class VueAppNode extends Node
             ->raw('$_vue_selector = ')
             ->subcompile($this->getNode('selector'))
             ->raw(";\n")
-            ->raw("yield '<script>window.VUE_APP = Vue.createApp({});</script>';\n")
-            ->raw("yield \$this->env->render('@VueInTwig/setup.js', \$context);\n")
+            ->raw("yield '<script>window.VUE_APP = Vue.createApp(window.VUE_ROOT ?? {});</script>';\n")
+            ->raw("yield '<script>' . \$this->env->render('@VueInTwig/setup.js', \$context) . '</script>';\n")
         ;
 
         $compiler->subcompile($this->getNode('body'));

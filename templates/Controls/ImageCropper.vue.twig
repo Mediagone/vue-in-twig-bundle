@@ -1,0 +1,25 @@
+<script id="vue-image-cropper" type="text/x-template">
+    <div class="ImageCropper">
+        <div ref="container" class="_cropContainer">
+            <img ref="image" :src="sourceDataUrl" alt="" />
+            <div class="_cropArea" :style="{ height: cssCropAreaHeight, width: cssCropAreaWidth, transform: cssCropAreaTranslate }">
+                <span class="_center"></span>
+                <span class="_dashed h"></span>
+                <span class="_dashed v"></span>
+                <div class="_mover"     data-cropper-action="move" @mousedown="onMouseDown"></div>
+                <span class="_line line-e" data-cropper-action="e" @mousedown="onMouseDown" v-if="!fixedRatio"></span>
+                <span class="_line line-n" data-cropper-action="n" @mousedown="onMouseDown" v-if="!fixedRatio"></span>
+                <span class="_line line-w" data-cropper-action="w" @mousedown="onMouseDown" v-if="!fixedRatio"></span>
+                <span class="_line line-s" data-cropper-action="s" @mousedown="onMouseDown" v-if="!fixedRatio"></span>
+                <div class="_point point-e"  data-cropper-action="e"  @mousedown="onMouseDown" v-if="!fixedRatio"></div>
+                <div class="_point point-n"  data-cropper-action="n"  @mousedown="onMouseDown" v-if="!fixedRatio"></div>
+                <div class="_point point-w"  data-cropper-action="w"  @mousedown="onMouseDown" v-if="!fixedRatio"></div>
+                <div class="_point point-s"  data-cropper-action="s"  @mousedown="onMouseDown" v-if="!fixedRatio"></div>
+                <div class="_point point-ne" data-cropper-action="ne" @mousedown="onMouseDown"></div>
+                <div class="_point point-nw" data-cropper-action="nw" @mousedown="onMouseDown"></div>
+                <div class="_point point-sw" data-cropper-action="sw" @mousedown="onMouseDown"></div>
+                <div class="_point point-se" data-cropper-action="se" @mousedown="onMouseDown"></div>
+            </div>
+        </div>
+    </div>
+</script>

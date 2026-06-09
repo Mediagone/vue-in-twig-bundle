@@ -1,0 +1,46 @@
+<script id="vue-drop-zone" type="text/x-template">
+    <div class="DropZone"
+         :class="{
+            '-valid-target':    isValidDropTarget,
+            '-zone-hovered':    isDragZoneHovered,
+         }"
+         @dragover.prevent="onZoneDrag"
+         @dragleave.prevent="onZoneLeave"
+         @drop.prevent="onZoneDrop"
+    >
+        <div class="DropZone_body">
+            <slot name="instructions" :fileInput="fileInput">
+                <span class="DropZone_instructions">
+                    <strong>Glissez-déposez vos fichiers</strong> ou
+                    <span class="DropZone_browse" @click="fileInput.click()">parcourir les fichiers</span>.
+                </span>
+            </slot>
+            <div class="DropZone_infos">
+                <slot name="infos" :formats="infosFormats" :maxSize="infosMaxSize">
+                    Formats autorisés : <strong>[[ infosFormats ]]</strong> (max. [[ infosMaxSize ]])
+                </slot>
+            </div>
+        </div>
+
+        <vue-modal
+                v-if="modal && modal.name === 'preview'"
+                :titleText="title"
+                yesButtonText="Envoyer"
+                noButtonText="Annuler"
+                @clickyes="emitFiles(modal.files); modal = null"
+                @clickno="modal = null"
+        >
+            <div class="DropZone_preview">
+                <div v-for="item in modal.files" class="DropZone_preview_item" :class="{ '-error': item.error }">
+                    <span class="DropZone_preview_name">[[ item.file.name ]]</span>
+                    <span class="DropZone_preview_size">[[ formatByteSize(item.file.size, 1) ]]</span>
+                    <div class="DropZone_preview_error" v-if="item.error">
+                        <span v-if="item.error === 'size_too_big'">Fichier trop lourd ([[ infosMaxSize ]] max)</span>
+                        <span v-else-if="item.error === 'selection_limit_reached'">Limite d'envois simultanés atteinte ([[ selectionLimit ]] max)</span>
+                        <span v-else-if="item.error === 'type_not_allowed'">Type de fichier invalide (formats autorisés : [[ infosFormats ]])</span>
+                    </div>
+                </div>
+            </div>
+        </vue-modal>
+    </div>
+</script>

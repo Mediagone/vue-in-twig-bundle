@@ -1,0 +1,7 @@
+<script id="vue-togglebutton" type="text/x-template">
+    <label class="ToggleButton"
+           :class="{'-on': (value === value_on), '-off': (value === value_off), '-busy': isBusy}"
+           @click="clicked()">
+        <span class="ToggleButton_container"><span class="ToggleButton_toggle"></span></span>
+    </label>
+</script>

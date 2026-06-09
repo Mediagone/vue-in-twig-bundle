@@ -186,6 +186,7 @@ v-if="block.type === '{{ constant('App\\Domain\\Block::TYPE_VIDEO') }}'"
 | Component | Description |
 |---|---|
 | `AutoResize` | Dynamically resizes a textarea/input to fit its content |
+| `Draggable` | Native HTML5 drag & drop. Reorders a list's children and moves items between lists sharing a `group`. Insertion-line or gap-placeholder feedback, keeps empty lists droppable. Props `v-model`/`group`/`sort`/`empty-height`/`use-placeholder`, themable via `--vue-draggable-indicator-*` CSS vars, emits `change`. Zero dependency. |
 
 #### `Layout/` — structural containers
 

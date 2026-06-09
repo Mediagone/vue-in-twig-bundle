@@ -1,0 +1,49 @@
+<script id="vue-upload-zone" type="text/x-template">
+    <div class="UploadZone"
+         :class="{ '--validDropTarget': isValidDropTarget, '--dropReady': isDragZoneHovered }"
+         @dragover.prevent="onZoneDrag"
+         @dragleave.prevent="onZoneLeave"
+         @drop.prevent="onZoneDrop">
+
+        <div class="_drop-infos">
+            <span class="_text" v-html="dropText"></span>
+            <span class="_browse-btn" @click="dummyFileInput.click()">Parcourir</span>
+            <div class="_info-text" v-html="dropInfoParsedText"></div>
+        </div>
+
+        <vue-modal v-if="selectedFiles.length > 0"
+                   :titleText="title"
+                   :yesButtonText="yesButtonText"
+                   :noButtonText="noButtonText"
+                   @clickyes="sendData()"
+                   @clickno="selectedFiles = []">
+
+            <div class="_fileList" v-if="allowMultipleFiles || !cropperDataUrl">
+                <div class="_file" v-for="file in selectedFiles" :key="file.data.name">
+                    <div class="_thumb" :class="file.category"></div>
+                    <strong>[[ file.data.name ]]</strong> – [[ file.formattedSize ]]
+                </div>
+            </div>
+
+            <vue-image-cropper v-if="cropperDataUrl"
+                               :sourceDataUrl="cropperDataUrl"
+                               :fixedRatio="editorFixedRatio"
+                               :outputWidth="editorOutputWidth"
+                               :outputHeight="editorOutputHeight"
+                               :outputMimeFormat="editorOutputFormat"
+                               @cropped="onImageCropped">
+            </vue-image-cropper>
+
+            <div class="_progressBar" v-if="uploadProgress">
+                <div class="_progress" :style="{ width: cssProgressWidth }"></div>
+                <div class="_progress-value">[[ Math.round(uploadProgress) ]]%</div>
+            </div>
+        </vue-modal>
+
+        <vue-modal v-if="modalData" :yesButtonText="modalData.button" @clickyes="modalData = null">
+            <div class="_error-title">[[ modalData.title ]]</div>
+            <p v-html="modalData.text"></p>
+        </vue-modal>
+
+    </div>
+</script>

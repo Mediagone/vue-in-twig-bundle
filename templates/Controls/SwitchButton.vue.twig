@@ -1,0 +1,7 @@
+<script id="vue-switch-button" type="text/x-template">
+    <label class="SwitchButton"
+           :class="{'-on': (object[property] === valueOn), '-off': (object[property] === valueOff), '-busy': disabled}"
+           @click="clicked()">
+        <span class="SwitchButton_container"><span class="SwitchButton_toggle"></span></span>
+    </label>
+</script>

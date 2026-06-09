@@ -1,0 +1,8 @@
+<script id="vue-lock-wrapper" type="text/x-template">
+    <div class="LockWrapper">
+        <slot name="content" :locked="locked" :lock="lock" :unlock="unlock" :toggle="toggle"></slot>
+        <button class="LockWrapper_button" @click="toggle()">
+            <slot name="button" :locked="locked"></slot>
+        </button>
+    </div>
+</script>

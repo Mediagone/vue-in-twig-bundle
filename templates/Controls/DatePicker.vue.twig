@@ -1,0 +1,15 @@
+<script id="vue-date-picker" type="text/x-template">
+    <div class="DatePicker">
+        {% apply spaceless %}
+            <select :disabled="$attrs.disabled" v-model="selectedDay">
+                <option v-for="day in availableDays">[[ day ]]</option>
+            </select>
+            <select :disabled="$attrs.disabled" v-model="selectedMonth">
+                <option v-for="month in availableMonths" :value="month">[[ month_name(month) ]]</option>
+            </select>
+            <select :disabled="$attrs.disabled" v-model="selectedYear">
+                <option v-for="year in availableYears">[[ year ]]</option>
+            </select>
+        {% endapply %}
+    </div>
+</script>
