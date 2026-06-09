@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue-in-twig-bundle — Demo</title>
+    <link rel="stylesheet" href="/demo/demo.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        body      { font-family: sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+        h2        { margin-top: 2rem; padding-bottom: .25rem; border-bottom: 1px solid #ccc; color: #444; }
+        .demo-block { border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem 1.5rem; margin: 1rem 0; background: #fafafa; }
+        .demo-label { font-size: .75rem; color: #999; font-family: monospace; margin-bottom: .75rem; }
+    </style>
+</head>
+<body>
+
+{#
+    VUE_ROOT doit être défini avant {% vue_app %} car VueAppNode génère
+    Vue.createApp(window.VUE_ROOT ?? {}) en toute première instruction.
+
+    cropperImage contient la data URL de l'image placeholder (générée par PHP).
+    Elle est passée via VUE_ROOT.data() pour éviter d'inliner une longue chaîne
+    base64 dans un attribut HTML.
+#}
+<script>
+window.VUE_ROOT = {
+    data() {
+        return {
+            showModal:    false,
+            switchItem:   { status: 'on' },
+            editorItem:   { id: 1, name: 'Alice Dupont', email: 'alice@example.com' },
+            dragListA:    [ { id: 1, label: 'Alpha' }, { id: 2, label: 'Beta' }, { id: 3, label: 'Gamma' } ],
+            dragListB:    [ { id: 4, label: 'Delta' }, { id: 5, label: 'Epsilon' } ],
+            cropperImage: '{{ cropperDataUrl }}',
+            flashes: [
+                { type: 'success', message: 'Bienvenue dans la démo !' },
+                { type: 'notice',  message: 'Composant NotificationBar actif.' },
+            ],
+        };
+    },
+    methods: {
+        notify(type, message) { window.VUE_NOTIFY?.(type, message); },
+    },
+};
+</script>
+
+{#
+    IMPORTANT : <div id="app"> est l'élément monté par Vue.
+    Vue fait container.innerHTML = '' avant de monter, ce qui efface les
+    <script type="text/x-template"> s'ils se trouvent à l'intérieur.
+    Le bloc {% vue_app %} est donc placé APRÈS ce div (en dehors),
+    de sorte que les x-templates survivent au mount.
+#}
+<div id="app">
+
+<h1>vue-in-twig-bundle — Demo</h1>
+
+{# ── Behaviors ───────────────────────────────────────────────────────────────── #}
+<h2>Behaviors</h2>
+
+<div class="demo-block">
+    <div class="demo-label">Behaviors/AutoResize</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-auto-resize&gt;
+    &lt;textarea
+        placeholder="..."
+        style="width:100%;resize:none"
+    &gt;&lt;/textarea&gt;
+&lt;/vue-auto-resize&gt;</pre>
+        <div class="demo-preview">
+            <vue-auto-resize>
+                <textarea placeholder="Saisissez du texte — le textarea grandit automatiquement…" style="width:100%;min-height:60px;resize:none"></textarea>
+            </vue-auto-resize>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Behaviors/Draggable</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;!-- réordonner, et déplacer entre les deux listes (même group) --&gt;
+&lt;vue-draggable v-model="listA" group="demo"&gt;
+    &lt;div&gt;
+        &lt;div v-for="it in listA" :key="it.id"&gt;[[ it.label ]]&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/vue-draggable&gt;
+
+&lt;vue-draggable v-model="listB" group="demo" use-placeholder&gt;
+    &lt;div&gt;
+        &lt;div v-for="it in listB" :key="it.id"&gt;[[ it.label ]]&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/vue-draggable&gt;</pre>
+        <div class="demo-preview demo-columns">
+            <div style="flex:1">
+                <div class="demo-label">listA — indicateur ligne (défaut)</div>
+                <vue-draggable v-model="dragListA" group="demo">
+                    <div style="border:1px dashed #ccc;border-radius:4px;padding:6px;min-height:2.5em">
+                        <div v-for="it in dragListA" :key="it.id" style="padding:6px 10px;margin:4px 0;background:#f3f3f3;border:1px solid #ddd;border-radius:4px;cursor:grab">[[ it.label ]]</div>
+                    </div>
+                </vue-draggable>
+            </div>
+            <div style="flex:1">
+                <div class="demo-label">listB — placeholder (use-placeholder)</div>
+                <vue-draggable v-model="dragListB" group="demo" use-placeholder>
+                    <div style="border:1px dashed #ccc;border-radius:4px;padding:6px;min-height:2.5em">
+                        <div v-for="it in dragListB" :key="it.id" style="padding:6px 10px;margin:4px 0;background:#f3f3f3;border:1px solid #ddd;border-radius:4px;cursor:grab">[[ it.label ]]</div>
+                    </div>
+                </vue-draggable>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ── Layout ──────────────────────────────────────────────────────────────────── #}
+<h2>Layout</h2>
+
+<div class="demo-block">
+    <div class="demo-label">Layout/LockWrapper</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-lock-wrapper&gt;
+    &lt;template #content="{ locked }"&gt;
+        &lt;input :disabled="locked" value="..." /&gt;
+    &lt;/template&gt;
+    &lt;template #button="{ locked }"&gt;
+        [[ locked ? 'Déverrouiller' : 'Verrouiller' ]]
+    &lt;/template&gt;
+&lt;/vue-lock-wrapper&gt;</pre>
+        <div class="demo-preview">
+            <vue-lock-wrapper>
+                <template #content="{ locked }">
+                    <input :disabled="locked" value="Éditable si déverrouillé" style="width:220px" />
+                </template>
+                <template #button="{ locked }">
+                    [[ locked ? 'Déverrouiller' : 'Verrouiller' ]]
+                </template>
+            </vue-lock-wrapper>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Layout/Modal</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;button @click="showModal = true"&gt;Ouvrir&lt;/button&gt;
+&lt;vue-modal
+    v-if="showModal"
+    title-text="Titre de la modale"
+    yes-button-text="Confirmer"
+    no-button-text="Annuler"
+    @clickyes="showModal = false"
+    @clickno="showModal = false"
+&gt;
+    &lt;p&gt;Contenu de la modale.&lt;/p&gt;
+&lt;/vue-modal&gt;</pre>
+        <div class="demo-preview">
+            <button @click="showModal = true">Ouvrir la modale</button>
+            <vue-modal
+                v-if="showModal"
+                title-text="Titre de la modale"
+                yes-button-text="Confirmer"
+                no-button-text="Annuler"
+                @clickyes="showModal = false"
+                @clickno="showModal = false"
+            >
+                <p>Contenu de la modale.</p>
+            </vue-modal>
+        </div>
+    </div>
+</div>
+
+{# ── Controls ────────────────────────────────────────────────────────────────── #}
+<h2>Controls</h2>
+
+<div class="demo-block">
+    <div class="demo-label">Controls/DatePicker</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-date-picker
+    :initial-date="new Date()"
+    :years-before="2"
+    :years-after="3"
+&gt;&lt;/vue-date-picker&gt;</pre>
+        <div class="demo-preview">
+            <vue-date-picker :initial-date="new Date()" :years-before="2" :years-after="3"></vue-date-picker>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Controls/DatetimePicker</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-datetime-picker
+    :initial-date="new Date()"
+    :use-time="true"
+&gt;&lt;/vue-datetime-picker&gt;</pre>
+        <div class="demo-preview">
+            <vue-datetime-picker :initial-date="new Date()" :use-time="true"></vue-datetime-picker>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Controls/SwitchButton</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-switch-button
+    :object="switchItem"
+    property="status"
+    value-on="on"
+    value-off="off"
+    @switch-request="switchItem.status = $event"
+&gt;&lt;/vue-switch-button&gt;</pre>
+        <div class="demo-preview">
+            <vue-switch-button
+                :object="switchItem"
+                property="status"
+                value-on="on"
+                value-off="off"
+                @switch-request="switchItem.status = $event"
+            ></vue-switch-button>
+            <span style="margin-left:1rem;color:#555">État : [[ switchItem.status ]]</span>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Controls/ToggleButton <small style="color:#bbb">(XHR mocké, délai 300ms)</small></div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-togglebutton
+    :api_url="{{ '{{' }} vue_path('demo_toggle') {{ '}}' }}"
+    result_name="toggle_item"
+    result_property="active"
+&gt;&lt;/vue-togglebutton&gt;</pre>
+        <div class="demo-preview">
+            <vue-togglebutton
+                :api_url="{{ vue_path('demo_toggle') }}"
+                result_name="toggle_item"
+                result_property="active"
+            ></vue-togglebutton>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Controls/DropZone</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-drop-zone
+    title="Déposer un fichier ici"
+    file-mime-types="image/jpeg,image/png"
+    :file-max-size="5242880"
+&gt;&lt;/vue-drop-zone&gt;</pre>
+        <div class="demo-preview">
+            <vue-drop-zone title="Déposer un fichier ici" file-mime-types="image/jpeg,image/png" :file-max-size="5242880"></vue-drop-zone>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Controls/UploadZone <small style="color:#bbb">(upload mocké)</small></div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-upload-zone
+    post-url="/upload"
+    post-parameter-name="file"
+    title="Envoyer un fichier"
+    drop-text="Glisser ici ou cliquer"
+&gt;&lt;/vue-upload-zone&gt;</pre>
+        <div class="demo-preview">
+            <vue-upload-zone
+                post-url="/demo/upload"
+                post-parameter-name="file"
+                title="Envoyer un fichier"
+                drop-text="Glisser un fichier ici ou cliquer pour parcourir"
+            ></vue-upload-zone>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Controls/ImageCropper</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-image-cropper
+    :source-data-url="imageDataUrl"
+    output-mime-format="image/jpeg"
+&gt;&lt;/vue-image-cropper&gt;</pre>
+        <div class="demo-preview">
+            <vue-image-cropper
+                :source-data-url="cropperImage"
+                output-mime-format="image/jpeg"
+            ></vue-image-cropper>
+        </div>
+    </div>
+</div>
+
+{# ── Widgets ─────────────────────────────────────────────────────────────────── #}
+<h2>Widgets</h2>
+
+<div class="demo-block">
+    <div class="demo-label">Widgets/NotificationBar</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;!-- Affichage des flash messages Symfony --&gt;
+&lt;vue-notification-bar :flashes="flashes"&gt;&lt;/vue-notification-bar&gt;
+
+&lt;!-- Depuis Vue --&gt;
+&lt;button @click="notify('success', '...')"&gt;...&lt;/button&gt;
+
+&lt;!-- Depuis JS vanilla --&gt;
+window.VUE_NOTIFY('success', 'Message !')</pre>
+        <div class="demo-preview">
+            <vue-notification-bar :flashes="flashes"></vue-notification-bar>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem">
+                <button @click="notify('alert',   'Alerte critique !')">Alerte</button>
+                <button @click="notify('warning', 'Attention !')">Warning</button>
+                <button @click="notify('notice',  'Information.')">Info</button>
+                <button onclick="window.VUE_NOTIFY?.('success', 'Depuis vanilla JS !')">Vanilla JS</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Widgets/DataList <small style="color:#bbb">(XHR mocké)</small></div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-datalist items-list-url="/api/list"&gt;
+    &lt;template #table-headers&gt;
+        &lt;th&gt;ID&lt;/th&gt;&lt;th&gt;Nom&lt;/th&gt;
+    &lt;/template&gt;
+    &lt;template #table-row="{ row }"&gt;
+        &lt;td&gt;[[ row.id ]]&lt;/td&gt;
+        &lt;td&gt;[[ row.name ]]&lt;/td&gt;
+    &lt;/template&gt;
+    &lt;template #table-busy&gt;
+        &lt;td colspan="2"&gt;Chargement…&lt;/td&gt;
+    &lt;/template&gt;
+    &lt;template #table-empty&gt;
+        &lt;td colspan="2"&gt;Aucun élément.&lt;/td&gt;
+    &lt;/template&gt;
+&lt;/vue-datalist&gt;</pre>
+        <div class="demo-preview">
+            <vue-datalist items-list-url="/demo/list">
+                <template #table-headers>
+                    <th>ID</th><th>Nom</th>
+                </template>
+                <template #table-row="{ row }">
+                    <td>[[ row.id ]]</td><td>[[ row.name ]]</td>
+                </template>
+                <template #table-busy>
+                    <td colspan="2">Chargement…</td>
+                </template>
+                <template #table-empty>
+                    <td colspan="2">Aucun élément.</td>
+                </template>
+            </vue-datalist>
+        </div>
+    </div>
+</div>
+
+<div class="demo-block">
+    <div class="demo-label">Widgets/DataEditor <small style="color:#bbb">(sauvegarde mockée)</small></div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-data-editor
+    :item="editorItem"
+    post-url="/api/save"
+    post-url-properties="name,email"
+&gt;
+    &lt;template #default="{ item, changed }"&gt;
+        &lt;input v-model="item.name"
+               @input="changed()" /&gt;
+        &lt;input v-model="item.email"
+               @input="changed()" /&gt;
+    &lt;/template&gt;
+&lt;/vue-data-editor&gt;</pre>
+        <div class="demo-preview">
+            <vue-data-editor :item="editorItem" post-url="/demo/editor" post-url-properties="name,email">
+                <template #default="{ item, changed }">
+                    <div style="display:flex;flex-direction:column;gap:.5rem;max-width:320px;padding:.5rem 0">
+                        <label style="display:flex;align-items:center;gap:.5rem">
+                            <span style="width:3.5rem;flex-shrink:0;font-size:.9rem">Nom</span>
+                            <input v-model="item.name"  @input="changed()" style="padding:.3rem;flex:1" />
+                        </label>
+                        <label style="display:flex;align-items:center;gap:.5rem">
+                            <span style="width:3.5rem;flex-shrink:0;font-size:.9rem">Email</span>
+                            <input v-model="item.email" @input="changed()" style="padding:.3rem;flex:1" />
+                        </label>
+                    </div>
+                </template>
+            </vue-data-editor>
+        </div>
+    </div>
+</div>
+
+</div>{# /div#app — fin de la zone montée par Vue #}
+
+{#
+    {% vue_app %} est placé APRÈS </div#app> intentionnellement.
+    Ses sorties (x-templates, enregistrements de composants, VUE_APP.mount) sont
+    en dehors de l'élément monté et ne sont donc pas effacées par Vue au mount.
+
+    Les vue_use() ici alimentent la queue qui est consommée à {% endvue_app %}.
+    Le contenu HTML des composants (usages) est dans <div id="app"> ci-dessus.
+#}
+{% vue_app '#app' %}
+
+{{ vue_use('Behaviors/AutoResize') }}
+{{ vue_use('Behaviors/Draggable') }}
+{{ vue_use('Layout/Modal') }}
+{{ vue_use('Layout/LockWrapper') }}
+{{ vue_use('Controls/DatePicker') }}
+{{ vue_use('Controls/DatetimePicker') }}
+{{ vue_use('Controls/SwitchButton') }}
+{{ vue_use('Controls/ToggleButton') }}
+{{ vue_use('Controls/DropZone') }}
+{{ vue_use('Controls/UploadZone') }}
+{{ vue_use('Controls/ImageCropper') }}
+{{ vue_use('Widgets/NotificationBar') }}
+{{ vue_use('Widgets/DataList') }}
+{{ vue_use('Widgets/DataEditor') }}
+
+<script>
+axios.defaults.adapter = config => new Promise(resolve =>
+    setTimeout(() => resolve({
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config: config,
+        request: {},
+        data: {
+            data: {
+                results: [{ id: 1, name: 'Item Alpha' }, { id: 2, name: 'Item Beta' }, { id: 3, name: 'Item Gamma' }],
+                result:  { id: 1, name: 'Alice Dupont', email: 'alice@example.com' },
+            },
+            results: { toggle_item: { active: '1' } },
+        },
+    }), 300)
+);
+</script>
+
+{% endvue_app %}
+
+</body>
+</html>

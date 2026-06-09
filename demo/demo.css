@@ -1,0 +1,313 @@
+/* ── Two-column demo layout ─────────────────────────────────────────────────── */
+.demo-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+.demo-code {
+    background: #1e1e1e;
+    color: #cdd3de;
+    padding: .75rem 1rem;
+    border-radius: 4px;
+    font-size: .78rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 0;
+}
+.demo-preview { min-width: 0; }
+
+/* ── Base ───────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+button {
+    padding: .3rem .9rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: .9rem;
+}
+button:hover { background: #ebebeb; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Modal ──────────────────────────────────────────────────────────────────── */
+.Modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    z-index: 100;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 5vh;
+}
+.Modal .__Container {
+    background: white;
+    border-radius: 8px;
+    width: min(520px, 92vw);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+}
+.Modal .__Header {
+    padding: .75rem 1.5rem;
+    background: #4f46e5;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+.Modal .__Header.--danger  { background: #dc2626; }
+.Modal .__Header.--warning { background: #d97706; }
+.Modal .__Body { padding: 1.25rem 1.5rem; }
+.Modal .__Content { min-height: 2rem; }
+.Modal .__Buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+    padding-top: 1rem;
+}
+.Modal .__Buttons button { padding: .4rem 1.1rem; }
+.Modal .__Buttons button.--primary { background: #4f46e5; color: white; border-color: #4f46e5; }
+.Modal .__Buttons button.--danger  { background: #dc2626; color: white; border-color: #dc2626; }
+.Modal .__Buttons button.--warning { background: #d97706; color: white; border-color: #d97706; }
+
+/* ── LockWrapper ────────────────────────────────────────────────────────────── */
+.LockWrapper { display: inline-flex; flex-direction: row; align-items: center; gap: .5rem; }
+.LockWrapper_button { order: -1; }
+
+/* ── SwitchButton ───────────────────────────────────────────────────────────── */
+.SwitchButton {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+}
+.SwitchButton_container {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 12px;
+    transition: background .2s;
+}
+.SwitchButton.-on .SwitchButton_container  { background: #4f46e5; }
+.SwitchButton.-busy .SwitchButton_container { opacity: .6; }
+.SwitchButton_toggle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform .2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+}
+.SwitchButton.-on .SwitchButton_toggle { transform: translateX(20px); }
+
+/* ── ToggleButton ───────────────────────────────────────────────────────────── */
+.ToggleButton {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+.ToggleButton_container {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 12px;
+    transition: background .2s;
+}
+.ToggleButton.-on .ToggleButton_container  { background: #4f46e5; }
+.ToggleButton.-busy .ToggleButton_container { opacity: .6; }
+.ToggleButton_toggle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform .2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+}
+.ToggleButton.-on .ToggleButton_toggle { transform: translateX(20px); }
+
+/* ── DatePicker / DatetimePicker ────────────────────────────────────────────── */
+.DatePicker select,
+.DatetimePicker select {
+    padding: .3rem .5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: .9rem;
+}
+.DatetimePicker { display: flex; align-items: center; gap: .5rem; }
+.DatetimePicker_date,
+.DatetimePicker_time { display: flex; align-items: center; gap: .25rem; }
+.DatetimePicker_selects { display: flex; gap: .25rem; }
+
+/* ── DropZone ───────────────────────────────────────────────────────────────── */
+.DropZone {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    transition: border-color .2s, background .2s;
+    cursor: default;
+}
+.DropZone.-valid-target { border-color: #10b981; background: #ecfdf5; }
+.DropZone.-zone-hovered { border-color: #4f46e5; background: #eef2ff; }
+.DropZone_browse { color: #4f46e5; text-decoration: underline; cursor: pointer; }
+.DropZone_infos { margin-top: .5rem; font-size: .85rem; color: #888; }
+.DropZone_preview_item { padding: .25rem 0; }
+.DropZone_preview_item.-error .DropZone_preview_name { color: #dc2626; }
+.DropZone_preview_error { font-size: .8rem; color: #dc2626; }
+
+/* ── UploadZone ─────────────────────────────────────────────────────────────── */
+.UploadZone {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    transition: border-color .2s, background .2s;
+}
+.UploadZone.--validDropTarget { border-color: #10b981; background: #ecfdf5; }
+.UploadZone.--dropReady { border-color: #4f46e5; background: #eef2ff; }
+.UploadZone ._browse-btn { color: #4f46e5; text-decoration: underline; cursor: pointer; margin-left: .5rem; }
+.UploadZone ._info-text { margin-top: .4rem; font-size: .8rem; color: #888; }
+.UploadZone ._file { display: flex; align-items: center; gap: .5rem; padding: .3rem 0; }
+.UploadZone ._progressBar { margin-top: 1rem; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+.UploadZone ._progress { height: 100%; background: #4f46e5; transition: width .2s; }
+
+/* ── ImageCropper ───────────────────────────────────────────────────────────── */
+.ImageCropper ._cropContainer {
+    position: relative;
+    height: 200px;
+    background: #222;
+    overflow: hidden;
+    border-radius: 4px;
+}
+.ImageCropper img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.ImageCropper ._cropArea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px solid white;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, .5);
+    cursor: move;
+}
+.ImageCropper ._mover { position: absolute; inset: 0; cursor: move; }
+.ImageCropper ._center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px; height: 20px;
+    border: 1px solid rgba(255, 255, 255, .6);
+    pointer-events: none;
+}
+.ImageCropper ._dashed {
+    position: absolute;
+    background: rgba(255, 255, 255, .3);
+    pointer-events: none;
+}
+.ImageCropper ._dashed.h { left: 33.3%; top: 0; width: 1px; height: 100%; }
+.ImageCropper ._dashed.v { top: 33.3%; left: 0; height: 1px; width: 100%; }
+.ImageCropper ._point {
+    position: absolute;
+    width: 10px; height: 10px;
+    background: white;
+    border: 1px solid #666;
+    border-radius: 2px;
+}
+.ImageCropper ._point.point-ne { top: -5px; right: -5px; cursor: ne-resize; }
+.ImageCropper ._point.point-nw { top: -5px; left: -5px;  cursor: nw-resize; }
+.ImageCropper ._point.point-se { bottom: -5px; right: -5px; cursor: se-resize; }
+.ImageCropper ._point.point-sw { bottom: -5px; left: -5px;  cursor: sw-resize; }
+.ImageCropper ._point.point-n  { top: -5px;    left: calc(50% - 5px); cursor: n-resize; }
+.ImageCropper ._point.point-s  { bottom: -5px; left: calc(50% - 5px); cursor: s-resize; }
+.ImageCropper ._point.point-e  { right: -5px;  top: calc(50% - 5px);  cursor: e-resize; }
+.ImageCropper ._point.point-w  { left: -5px;   top: calc(50% - 5px);  cursor: w-resize; }
+.ImageCropper ._line {
+    position: absolute;
+    background: rgba(255, 255, 255, .5);
+}
+.ImageCropper ._line.line-n { top: -1px;    left: 0; right: 0; height: 2px; cursor: n-resize; }
+.ImageCropper ._line.line-s { bottom: -1px; left: 0; right: 0; height: 2px; cursor: s-resize; }
+.ImageCropper ._line.line-e { right: -1px;  top: 0; bottom: 0; width: 2px; cursor: e-resize; }
+.ImageCropper ._line.line-w { left: -1px;   top: 0; bottom: 0; width: 2px; cursor: w-resize; }
+
+/* ── NotificationBar ────────────────────────────────────────────────────────── */
+.NotificationBar { position: fixed; top: 1rem; right: 1rem; z-index: 200; min-width: 300px; }
+.NotificationBar_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .65rem 1rem;
+    border-radius: 6px;
+    margin-bottom: .4rem;
+    font-size: .9rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+}
+.NotificationBar_item.--success { background: #d1fae5; border: 1px solid #6ee7b7; color: #065f46; }
+.NotificationBar_item.--notice  { background: #dbeafe; border: 1px solid #93c5fd; color: #1e40af; }
+.NotificationBar_item.--warning { background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; }
+.NotificationBar_item.--alert   { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; }
+.NotificationBar_close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0 0 0 .5rem;
+    opacity: .6;
+}
+.NotificationBar_close:hover { opacity: 1; }
+.NotificationBar_anim-enter-active,
+.NotificationBar_anim-leave-active { transition: all .25s ease; }
+.NotificationBar_anim-enter-from,
+.NotificationBar_anim-leave-to { opacity: 0; transform: translateX(20px); }
+
+/* ── DataList ───────────────────────────────────────────────────────────────── */
+.DataList_toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .6rem;
+    gap: .5rem;
+}
+.DataList .table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.DataList .table th,
+.DataList .table td { padding: .45rem .75rem; border: 1px solid #e0e0e0; text-align: left; }
+.DataList .table th { background: #f5f5f5; font-weight: 600; }
+.DataList .table tr:hover td { background: #fafafa; }
+
+/* ── DataEditor ─────────────────────────────────────────────────────────────── */
+.DataEditor .__SavePanel {
+    display: flex;
+    align-items: center;
+    padding: .5rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: .9rem;
+    gap: 1rem;
+}
+.DataEditor .__SavePanel.--modified { background: #fef3c7; border: 1px solid #f59e0b; }
+.DataEditor .__SavePanel.--upToDate { background: #d1fae5; border: 1px solid #6ee7b7; color: #065f46; }
+.DataEditor .__saveBtn {
+    margin-left: auto;
+    padding: .3rem .9rem;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.DataEditor .__saveBtn:hover { background: #4338ca; }

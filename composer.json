@@ -12,5 +12,8 @@
         "psr-4": {
             "Mediagone\\VueInTwigBundle\\": "src/"
         }
+    },
+    "scripts": {
+        "demo": "php -S localhost:8000 demo/index.php"
     }
 }
