@@ -1,0 +1,29 @@
+<script id="vue-data-editor" type="text/x-template">
+    {% apply spaceless %}
+        <div class="DataEditor">
+            <div class="__SavePanel --modified" v-show="postUrl !== '' && canSave">
+                <slot name="save-text">
+                    <span class="__text">Des informations ont été modifiées, voulez-vous enregistrer les changements&nbsp;?</span>
+                </slot>
+                <button class="__saveBtn" @click="save">Sauvegarder</button>
+            </div>
+
+            <div class="__SavePanel --upToDate" v-show="postUrl !== '' && !canSave && upToDateText">
+                <span class="__text" v-html="upToDateText"></span>
+            </div>
+
+            <slot :item="item" :originalItem="originalItem" :data="$data" :props="$props" :changed="checkForSave"></slot>
+
+            <vue-modal v-if="modal && modal.name === 'error'"
+                       titleText="Une erreur est survenue"
+                       titleStyle="danger"
+                       yesButtonText="Ok"
+                       yesButtonClass="--danger"
+                       @clickyes="modal = null">
+                <slot name="modal-error" :data="$data" :props="$props">
+                    <p>[[ modal.error.description ]]</p>
+                </slot>
+            </vue-modal>
+        </div>
+    {% endapply %}
+</script>
