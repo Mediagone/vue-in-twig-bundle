@@ -4,8 +4,8 @@ VUE_APP.component('vue-switch-button', {
     props: {
         object:    { type: Object,  required: true },
         property:  { type: String,  required: true },
-        valueOn:  { type: String,  required: true },
-        valueOff: { type: String,  required: true },
+        valueOn:  { type: [String, Boolean, Number], required: true },
+        valueOff: { type: [String, Boolean, Number], required: true },
         disabled:  { type: Boolean, default: false },
     },
     methods: {
