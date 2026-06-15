@@ -1,0 +1,103 @@
+<script id="{{ ComponentName }}" type="text/x-template">
+    <div class="DataList">
+        <div class="DataList_toolbar">
+            <div class="DataList_toolsLeft">
+                {% block TOOLS_LEFT %}{% endblock %}
+            </div>
+            <div class="DataList_toolsRight">
+                <button class="DataList_refresh" :disabled="isBusy" :title="resolvedTooltips.refresh" @click="itemsRefresh()" v-html="resolvedIcons.refresh"></button>
+                {% block TOOLS_RIGHT %}{% endblock %}
+            </div>
+        </div>
+        <table class="DataList_table">
+            <thead>
+                <tr class="DataList_pagination" v-if="pageCount > 1 && items.length > 0">
+                    <td :colspan="columnsCount">
+                        <button :disabled="isBusy || page <= 1" @click="pageFirst" class="DataList_pageBtn" :title="resolvedTooltips.first" v-html="resolvedIcons.first"></button>
+                        <button :disabled="isBusy || page - 10 < 1" @click="pageDown10" class="DataList_pageBtn" :title="resolvedTooltips.prev10" v-html="resolvedIcons.prev10"></button>
+                        <button :disabled="isBusy || page <= 1" @click="pageDown" class="DataList_pageBtn" :title="resolvedTooltips.prev" v-html="resolvedIcons.prev"></button>
+                        [[ resolvedTexts.page ]] <input :disabled="isBusy" class="DataList_pageInput" type="text" v-model.number="page" min="1" :max="pageCount" @change="checkPage()" /> / [[ pageCount ]]
+                        <button :disabled="isBusy || page >= pageCount" @click="pageUp" class="DataList_pageBtn" :title="resolvedTooltips.next" v-html="resolvedIcons.next"></button>
+                        <button :disabled="isBusy || page + 10 > pageCount" @click="pageUp10" class="DataList_pageBtn" :title="resolvedTooltips.next10" v-html="resolvedIcons.next10"></button>
+                        <button :disabled="isBusy || page >= pageCount" @click="pageLast" class="DataList_pageBtn" :title="resolvedTooltips.last" v-html="resolvedIcons.last"></button>
+                    </td>
+                </tr>
+                <tr ref="dataTableHeader">
+                    {% block TABLE_HEADERS %}{% endblock %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-if="isBusy">
+                    {% block TABLE_BUSY %}
+                        <td :colspan="columnsCount" class="DataList_loading"><em>[[ resolvedTexts.loading ]]</em></td>
+                    {% endblock %}
+                </tr>
+                <tr v-else-if="items.length === 0">
+                    {% block TABLE_EMPTY %}
+                        <td :colspan="columnsCount" class="DataList_empty"><em>[[ resolvedTexts.results_none ]]</em></td>
+                    {% endblock %}
+                </tr>
+                <tr v-else v-for="row in items" :key="rowKey(row)" v-bind="rowAttributes(row)">
+                    {% block TABLE_ROW %}{% endblock %}
+                </tr>
+                <tr class="DataList_pagination" v-if="pageCount > 1 && items.length > 0 && isBusy == false">
+                    <td :colspan="columnsCount">
+                        <button :disabled="page <= 1" @click="pageFirst" class="DataList_pageBtn" :title="resolvedTooltips.first" v-html="resolvedIcons.first"></button>
+                        <button :disabled="page <= 1" @click="pageDown" class="DataList_pageBtn" :title="resolvedTooltips.prev" v-html="resolvedIcons.prev"></button>
+                        [[ resolvedTexts.page ]] <input class="DataList_pageInput" type="text" v-model.number="page" min="1" :max="pageCount" @change="checkPage()" /> / [[ pageCount ]]
+                        <button :disabled="page >= pageCount" @click="pageUp" class="DataList_pageBtn" :title="resolvedTooltips.next" v-html="resolvedIcons.next"></button>
+                        <button :disabled="page >= pageCount" @click="pageLast" class="DataList_pageBtn" :title="resolvedTooltips.last" v-html="resolvedIcons.last"></button>
+                    </td>
+                </tr>
+                <tr class="DataList_count" v-if="items.length > 0 && isBusy == false">
+                    <td :colspan="columnsCount">
+                        <span>[[ items.length ]] [[ resolvedTexts.results_total ]] [[ itemsCountTotal ]]</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        {% block BODY %}{% endblock %}
+
+
+        {# CREATE ITEM MODAL #}
+        <vue-modal v-if="modal && modal.name === 'createItem'"
+                   :titleText="modal.title"
+                   :yesButtonText="modal.yesButtonText === undefined ? 'Créer' : modal.yesButtonText"
+                   :noButtonText="modal.noButtonText === undefined ? 'Annuler' : modal.noButtonText"
+                   @clickyes="itemsCreate(modal.item); modal = null;"
+                   @clickno="modal = null"
+        >
+            {% block MODAL_CREATE %}{% endblock %}
+        </vue-modal>
+
+
+        {# DELETE ITEM MODAL #}
+        <vue-modal v-if="modal && modal.name === 'deleteItem'"
+                   :titleText="modal.title"
+                   titleStyle="warning"
+                   :yesButtonText="modal.yesButtonText === undefined ? 'Supprimer' : modal.yesButtonText"
+                   yesButtonClass="--warning"
+                   noButtonText="Annuler"
+                   @clickyes="itemsDelete(modal.item.id, modal.data ? modal.data : {}); modal = null;"
+                   @clickno="modal = null"
+        >
+            {% block MODAL_DELETE %}{% endblock %}
+        </vue-modal>
+
+
+        {# ERROR MODAL #}
+        <vue-modal v-if="modal && modal.name === 'error'"
+                   :titleText="modal.title || 'Une erreur est survenue'"
+                   titleStyle="danger"
+                   yesButtonText="Ok"
+                   yesButtonClass="--danger"
+                   @clickyes="modal = null;"
+        >
+            {% block MODAL_ERROR %}
+                <p class="DataList_errorText" v-html="modal.description"></p>
+            {% endblock %}
+        </vue-modal>
+
+    </div>
+</script>
