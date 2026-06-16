@@ -33,7 +33,7 @@ final class VueInTwigExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('vue_props_encode', $this->vuePropsEncode(...), ['is_safe' => ['html']]),
+            new TwigFilter('vue_json_encode', $this->vueJsonEncode(...), ['is_safe' => ['html']]),
         ];
     }
 
@@ -46,7 +46,7 @@ final class VueInTwigExtension extends AbstractExtension
         ];
     }
 
-    public function vuePropsEncode(mixed $data): string
+    public function vueJsonEncode(mixed $data): string
     {
         return json_encode(
             $data,

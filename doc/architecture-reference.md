@@ -78,7 +78,7 @@ The queue is request-scoped (the extension is a singleton service per request).
 
 | Type | Name | Description |
 |---|---|---|
-| Filter | `\|vue_props_encode` | `json_encode` with `JSON_HEX_TAG\|APOS\|AMP\|QUOT\|THROW_ON_ERROR` + `is_safe: html` |
+| Filter | `\|vue_json_encode` | `json_encode` with `JSON_HEX_TAG\|APOS\|AMP\|QUOT\|THROW_ON_ERROR` + `is_safe: html` |
 | Function | `vue_use(component)` | Adds component to queue, returns `''` |
 | Function | `vue_path(route, static, dynamic)` | Generates Symfony URL with Vue expression placeholders |
 | Token parser | `{% vue_app %}` | Registered via `getTokenParsers()` → `VueAppTokenParser` |
