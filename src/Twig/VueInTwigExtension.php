@@ -14,7 +14,10 @@ final class VueInTwigExtension extends AbstractExtension
     /** @var string[] */
     private array $queue = [];
 
-    public function __construct(private readonly UrlGeneratorInterface $urlGenerator) {}
+    public function __construct(
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly string $defaultNamespace = '@VueInTwig',
+    ) {}
 
     public function getTokenParsers(): array
     {
@@ -46,6 +49,10 @@ final class VueInTwigExtension extends AbstractExtension
 
     public function vueUse(string $component): string
     {
+        // Explicit namespace (@VueInTwig/…, @App/…) else use the default namespace specified by the app.
+        if (!str_starts_with($component, '@')) {
+            $component = rtrim($this->defaultNamespace, '/') . '/' . $component;
+        }
         if (!in_array($component, $this->queue, true)) {
             $this->queue[] = $component;
         }

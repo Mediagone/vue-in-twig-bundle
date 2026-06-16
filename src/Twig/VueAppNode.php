@@ -33,8 +33,9 @@ final class VueAppNode extends Node
 
         $compiler
             ->raw("foreach (\$_vue_ext->getQueue() as \$_vue_component) {\n")
-            ->raw("    \$_vue_twig = '@VueInTwig/' . \$_vue_component . '.vue.twig';\n")
-            ->raw("    \$_vue_js   = '@VueInTwig/' . \$_vue_component . '.vue.js';\n")
+            // The queue already holds the fully-namespaced reference (e.g. @VueInTwig/Foo, @App/Bar).
+            ->raw("    \$_vue_twig = \$_vue_component . '.vue.twig';\n")
+            ->raw("    \$_vue_js   = \$_vue_component . '.vue.js';\n")
             ->raw("    if (\$this->env->getLoader()->exists(\$_vue_twig)) {\n")
             ->raw("        yield \$this->env->render(\$_vue_twig, \$context);\n")
             ->raw("    }\n")
