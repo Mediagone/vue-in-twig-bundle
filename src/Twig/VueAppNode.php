@@ -43,6 +43,7 @@ final class VueAppNode extends Node
             ->raw("        yield '<script>' . \$this->env->render(\$_vue_js, \$context) . '</script>';\n")
             ->raw("    }\n")
             ->raw("}\n")
+            ->raw("yield \$_vue_ext->flushConfigs();\n")
             ->raw("yield '<script>VUE_APP.mount(\"' . \$_vue_selector . '\");</script>';\n")
         ;
     }

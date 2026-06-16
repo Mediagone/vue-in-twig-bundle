@@ -14,6 +14,9 @@ final class VueInTwigExtension extends AbstractExtension
     /** @var string[] */
     private array $queue = [];
 
+    /** @var array<string, array<string, array{type: string, value: string}>> */
+    private array $configBuffer = [];
+
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly string $defaultNamespace = '@VueInTwig',
@@ -21,7 +24,10 @@ final class VueInTwigExtension extends AbstractExtension
 
     public function getTokenParsers(): array
     {
-        return [new VueAppTokenParser()];
+        return [
+            new VueAppTokenParser(),
+            new VueConfigTokenParser(),
+        ];
     }
 
     public function getFilters(): array
@@ -36,6 +42,7 @@ final class VueInTwigExtension extends AbstractExtension
         return [
             new TwigFunction('vue_use', $this->vueUse(...)),
             new TwigFunction('vue_path', $this->vuePath(...), ['is_safe' => ['html']]),
+            new TwigFunction('vue_config', $this->vueConfig(...)),
         ];
     }
 
@@ -77,9 +84,52 @@ final class VueInTwigExtension extends AbstractExtension
         return $js;
     }
 
+    public function vueConfig(string $path, mixed $data): string
+    {
+        $json = json_encode($data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
+        [$root, $key] = str_contains($path, '.') ? explode('.', $path, 2) : [$path, ''];
+        $this->configBuffer[$root][$key] = ['type' => 'json', 'value' => $json];
+        return '';
+    }
+
+    public function addConfigRaw(string $path, string $js): void
+    {
+        [$root, $key] = str_contains($path, '.') ? explode('.', $path, 2) : [$path, ''];
+        $this->configBuffer[$root][$key] = ['type' => 'raw', 'value' => $js];
+    }
+
+    public function flushConfigs(): string
+    {
+        if (empty($this->configBuffer)) {
+            return '';
+        }
+
+        $output = "<script>\n";
+        foreach ($this->configBuffer as $root => $entries) {
+            if (array_key_exists('', $entries)) {
+                $entry = $entries[''];
+                $output .= "VUE_CONFIG.{$root} = {$entry['value']};\n";
+            } else {
+                $output .= "VUE_CONFIG.{$root} = {\n";
+                $keys = array_keys($entries);
+                $lastKey = end($keys);
+                foreach ($entries as $key => $entry) {
+                    $comma = ($key !== $lastKey) ? ',' : '';
+                    $output .= "    {$key}: {$entry['value']}{$comma}\n";
+                }
+                $output .= "};\n";
+            }
+        }
+        $output .= '</script>';
+
+        $this->configBuffer = [];
+        return $output;
+    }
+
     public function resetQueue(): void
     {
         $this->queue = [];
+        $this->configBuffer = [];
     }
 
     public function getQueue(): array
