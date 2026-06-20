@@ -27,6 +27,7 @@ final class VueInTwigExtension extends AbstractExtension
         return [
             new VueAppTokenParser(),
             new VueConfigTokenParser(),
+            new VueUseTokenParser(),
         ];
     }
 
@@ -40,7 +41,6 @@ final class VueInTwigExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('vue_use', $this->vueUse(...)),
             new TwigFunction('vue_path', $this->vuePath(...), ['is_safe' => ['html']]),
             new TwigFunction('vue_config', $this->vueConfig(...)),
         ];
