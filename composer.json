@@ -1,6 +1,6 @@
 {
     "name": "mediagone/vue-in-twig-bundle",
-    "description": "Integrates Vue.js 3 into Symfony/Twig without any Node.js toolchain — extends it with Twig's server-side power to compose your components, generate safe Symfony URLs with dynamic parameters, and inject PHP constants or initial data directly into them.",
+    "description": "Integrates Vue.js 3 into Symfony/Twig without any Node.js/npm ecosystem — extends it with Twig's server-side power to compose your components, generate safe Symfony URLs with dynamic parameters, and inject PHP constants or initial data directly into them.",
     "type": "symfony-bundle",
     "license": "MIT",
     "require": {

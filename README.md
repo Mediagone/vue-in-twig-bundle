@@ -7,9 +7,7 @@
 
 Compose your components, inject PHP constants or initial data directly into them and generate safe Symfony URLs with dynamic parameters.
 
-**No _Node.js_ toolchain required**: no bundler, no build step, no node_modules...
-
-~~The primary objective is to automate and simplify using Vue inside a Symfony/Twig app, without adding a JS build toolchain on top of it.~~
+**No _Node.js/npm ecosystem_ required**: no bundler, no build step, no node_modules...
 
 ## Table of contents
 
@@ -60,6 +58,8 @@ _Note: the compiler build is required since there is no precompile step, the x-t
 ```
 
 
+## ~~Configuration~~
+~~The Twig namespace `@VueInTwig/` is configured automatically (`VueInTwigBundle::prepend()`) — no `twig.yaml` changes needed.~~
 
 
 

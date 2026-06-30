@@ -9,7 +9,7 @@ Technical implementation reference. Intended for maintainers and AI assistants w
 This bundle formalizes a Twig/Vue integration pattern where:
 - Vue components are written as **x-templates** (not SFC `.vue` files)
 - Twig renders and composes components **server-side**
-- There is **no Node.js toolchain**, no bundler, no build step
+- There is **no Node.js/npm ecosystem**, no bundler, no build step
 - Vue 3 (full build with compiler) is loaded as a plain `<script>` tag
 
 The x-template approach is intentional and is the core value of the bundle: it lets Twig write inside Vue templates (inject PHP constants, Symfony URLs, initial data).
