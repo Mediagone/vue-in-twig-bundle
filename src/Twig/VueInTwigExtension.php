@@ -48,10 +48,11 @@ final class VueInTwigExtension extends AbstractExtension
 
     public function vueJsonEncode(mixed $data): string
     {
-        return json_encode(
-            $data,
-            JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR
-        );
+        // JSON_HEX_QUOT (") is intentionally omitted: Vue's template expression parser
+        // can't handle " as a string delimiter. We use &quot; instead, which the HTML
+        // parser decodes back to " before Vue processes the attribute expression.
+        $json = json_encode($data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_THROW_ON_ERROR);
+        return str_replace('"', '&quot;', $json);
     }
 
     public function vueUse(string $component): string
