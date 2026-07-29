@@ -400,20 +400,20 @@ window.VUE_NOTIFY('success', 'Message !')</pre>
 #}
 {% vue_app '#app' %}
 
-{{ vue_use('Behaviors/AutoResize') }}
-{{ vue_use('Behaviors/Draggable') }}
-{{ vue_use('Layout/Modal') }}
-{{ vue_use('Layout/LockWrapper') }}
-{{ vue_use('Controls/DatePicker') }}
-{{ vue_use('Controls/DatetimePicker') }}
-{{ vue_use('Controls/SwitchButton') }}
-{{ vue_use('Controls/ToggleButton') }}
-{{ vue_use('Controls/DropZone') }}
-{{ vue_use('Controls/UploadZone') }}
-{{ vue_use('Controls/ImageCropper') }}
-{{ vue_use('Widgets/NotificationBar') }}
-{{ vue_use('Widgets/DataList') }}
-{{ vue_use('Widgets/DataEditor') }}
+{% vue_use 'Behaviors/AutoResize' %}
+{% vue_use 'Behaviors/Draggable' %}
+{% vue_use 'Layout/Modal' %}
+{% vue_use 'Layout/LockWrapper' %}
+{% vue_use 'Controls/DatePicker' %}
+{% vue_use 'Controls/DatetimePicker' %}
+{% vue_use 'Controls/SwitchButton' %}
+{% vue_use 'Controls/ToggleButton' %}
+{% vue_use 'Controls/DropZone' %}
+{% vue_use 'Controls/UploadZone' %}
+{% vue_use 'Controls/ImageCropper' %}
+{% vue_use 'Widgets/NotificationBar' %}
+{% vue_use 'Widgets/DataList' %}
+{% vue_use 'Widgets/DataEditor' %}
 
 <script>
 axios.defaults.adapter = config => new Promise(resolve =>
