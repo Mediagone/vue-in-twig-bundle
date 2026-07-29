@@ -825,3 +825,22 @@ VUE_APP.component('vue-users-list', {
 Call `this.debounceRefresh()` (instead of `this.itemsRefresh()`) from a search/filter input handler to debounce the request using `VUE_CONFIG.debounceSearch`.
 
 **`config` shape** — `{ parseResponse, parseErrorResponse, icons, texts, tooltips }`, merged over `VUE_CONFIG.DataList` (global default for every list, set via [`vue_config`](#configuration)); `icons`/`texts`/`tooltips` merge per-key, so a partial override keeps the other defaults.
+
+---
+
+## Local development
+
+To use the bundle from a local path instead of Packagist, add a path repository in the consuming project's `composer.json`:
+
+```json
+{
+    "repositories": [
+        { "type": "path", "url": "/absolute/path/to/vue-in-twig-bundle" }
+    ],
+    "require": {
+        "mediagone/vue-in-twig-bundle": "*"
+    }
+}
+```
+
+Composer will symlink (or junction on Windows) the directory into `vendor/`. Changes to the library are immediately reflected.
