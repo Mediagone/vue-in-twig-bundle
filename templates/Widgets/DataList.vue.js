@@ -1,3 +1,9 @@
+// Base list component — LOGIC ONLY (no template). Consumers provide the markup by embedding
+// @VueInTwig/Widgets/DataList.twig (overriding its blocks) and inherit this logic via
+// "extends: VUE_APP.component('vue-datalist')" in their own .vue.js.
+//
+// Provides: list refresh (with pagination), create/delete, and overridable hooks
+// (modifyUrlParameters / onItemsRefresh / onItemsRefreshFailure).
 VUE_APP.component('vue-datalist', {
     props: {
         itemsListUrl:   { type: String, required: true },

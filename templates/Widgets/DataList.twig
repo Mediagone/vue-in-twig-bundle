@@ -1,3 +1,18 @@
+{#
+    Embeddable list template. Use it from a consumer component:
+
+        {% embed '@VueInTwig/Widgets/DataList.twig' with { ComponentName: 'vue-xxx-list' } %}
+            {% block TABLE_HEADERS %}...{% endblock %}
+            {% block TABLE_ROW %}...{% endblock %}
+            ...
+        {% endembed %}
+
+    The consumer's .vue.js registers `vue-xxx-list` with `extends: VUE_APP.component('vue-datalist')`
+    and must ensure the base is loaded first (e.g. `{% vue_use '@VueInTwig/Widgets/DataList' %}`).
+
+    Styling: framework-agnostic class names (DataList, DataList_xxx, -modifier) — the project provides the CSS.
+    Icons: rendered from `resolvedIcons` (defaults < VUE_CONFIG.icons < `icons` prop), as markup.
+#}
 <script id="{{ ComponentName }}" type="text/x-template">
     <div class="DataList">
         <div class="DataList_toolbar">
