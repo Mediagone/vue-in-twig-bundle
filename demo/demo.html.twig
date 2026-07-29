@@ -170,6 +170,36 @@ window.VUE_ROOT = {
     </div>
 </div>
 
+<div class="demo-block">
+    <div class="demo-label">Layout/TabPanel</div>
+    <div class="demo-columns">
+        <pre class="demo-code" v-pre>&lt;vue-tabpanel active="settings"&gt;
+    &lt;vue-tabpanel-page title="Page 1"&gt;
+        Contenu de la page 1.
+    &lt;/vue-tabpanel-page&gt;
+    &lt;vue-tabpanel-page title="Page 2"&gt;
+        Contenu de la page 2.
+    &lt;/vue-tabpanel-page&gt;
+    &lt;vue-tabpanel-page title="Réglages" name="settings"&gt;
+        Contenu de la page réglages.
+    &lt;/vue-tabpanel-page&gt;
+&lt;/vue-tabpanel&gt;</pre>
+        <div class="demo-preview">
+            <vue-tabpanel active="settings">
+                <vue-tabpanel-page title="Page 1">
+                    Contenu de la page 1.
+                </vue-tabpanel-page>
+                <vue-tabpanel-page title="Page 2">
+                    Contenu de la page 2.
+                </vue-tabpanel-page>
+                <vue-tabpanel-page title="Réglages" name="settings">
+                    Contenu de la page réglages.
+                </vue-tabpanel-page>
+            </vue-tabpanel>
+        </div>
+    </div>
+</div>
+
 {# ── Controls ────────────────────────────────────────────────────────────────── #}
 <h2>Controls</h2>
 
@@ -404,6 +434,7 @@ window.VUE_NOTIFY('success', 'Message !')</pre>
 {% vue_use 'Behaviors/Draggable' %}
 {% vue_use 'Layout/Modal' %}
 {% vue_use 'Layout/LockWrapper' %}
+{% vue_use 'Layout/TabPanel' %}
 {% vue_use 'Controls/DatePicker' %}
 {% vue_use 'Controls/DatetimePicker' %}
 {% vue_use 'Controls/SwitchButton' %}

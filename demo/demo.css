@@ -71,6 +71,25 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .Modal__Buttons button.--danger  { background: #dc2626; color: white; border-color: #dc2626; }
 .Modal__Buttons button.--warning { background: #d97706; color: white; border-color: #d97706; }
 
+/* ── TabPanel ───────────────────────────────────────────────────────────────── */
+vue-tabpanel { display: none; } /* prevents a flash of all pages before Vue mounts */
+.TabPanel_Header {
+    display: flex;
+    gap: .25rem;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 1rem;
+}
+.TabPanel_Header > div {
+    padding: .5rem .9rem;
+    cursor: pointer;
+    color: #666;
+    border-bottom: 2px solid transparent;
+}
+.TabPanel_Header > div:hover { color: #333; }
+.TabPanel_Header > div.-active { color: #4f46e5; border-bottom-color: #4f46e5; }
+.TabPanel_Page { display: none; }
+.TabPanel_Page.-active { display: block; }
+
 /* ── LockWrapper ────────────────────────────────────────────────────────────── */
 .LockWrapper { display: inline-flex; flex-direction: row; align-items: center; gap: .5rem; }
 .LockWrapper_button { order: -1; }

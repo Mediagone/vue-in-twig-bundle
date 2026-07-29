@@ -32,7 +32,8 @@ templates/
 │   └── AutoResize.vue.js
 ├── Layout/                         # Structural container components
 │   ├── Modal.vue.twig + Modal.vue.js
-│   └── LockWrapper.vue.twig + LockWrapper.vue.js
+│   ├── LockWrapper.vue.twig + LockWrapper.vue.js
+│   └── TabPanel.vue.twig + TabPanel.vue.js
 ├── Controls/                       # Interaction primitives
 │   ├── DatePicker.vue.twig + DatePicker.vue.js
 │   ├── DatetimePicker.vue.twig + DatetimePicker.vue.js

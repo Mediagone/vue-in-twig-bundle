@@ -1,0 +1,16 @@
+<script id="vue-tabpanel" type="text/x-template">
+    <div class="TabPanel" :data-active="activeIndex">
+        <div class="TabPanel_Header">
+            <div v-for="(page, i) in pages" :key="i"
+                 :data-target="i + 1"
+                 :class="{'-active': activeIndex === i + 1}"
+                 @click="activate(i + 1)"
+                 v-text="page.title"></div>
+        </div>
+        <div class="TabPanel_Content"><slot></slot></div>
+    </div>
+</script>
+
+<script id="vue-tabpanel-page" type="text/x-template">
+    <div class="TabPanel_Page" :data-page="index" :class="{'-active': isActive}"><slot></slot></div>
+</script>

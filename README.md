@@ -588,6 +588,45 @@ On creation, performs `GET {api_url}?fields={result_property}` and reads `respon
 | *(default)* | Modal body |
 | `footer` | Replaces the default yes/no buttons (you then own the emits) |
 
+#### TabPanel (`vue-tabpanel` / `vue-tabpanel-page`)
+
+Tabbed container. Only the tab bar is built automatically, from the declared pages.
+
+```twig
+{% vue_use 'Layout/TabPanel' %}
+
+<vue-tabpanel active="settings">
+    <vue-tabpanel-page title="Page 1">…</vue-tabpanel-page>
+    <vue-tabpanel-page title="Réglages" name="settings">…</vue-tabpanel-page>
+</vue-tabpanel>
+```
+
+**Props** (`vue-tabpanel`)
+
+| Prop | Type | Default | Required |
+|---|---|---|---|
+| `active` | `String` | `''` | — `name` (or `title` as fallback) of the tab open on load; empty or not found falls back to the first page |
+
+**Props** (`vue-tabpanel-page`)
+
+| Prop | Type | Default | Required |
+|---|---|---|---|
+| `title` | `String` | — | ✓ — also used as the tab label, and as the `active` key when `name` is absent |
+| `name` | `String` | `''` | stable key for `active`, independent from the displayed label |
+
+**Emits** (`vue-tabpanel`): `change` (the activated page's key — `name` or `title`)
+
+**CSS classes** — the bundle ships no styles for this component; the consuming project renders the tab bar and pages from these classes:
+
+| Class | Notes |
+|---|---|
+| `.TabPanel` | Root, `data-active` holds the 1-based active index |
+| `.TabPanel_Header` / its children (`data-target`, `.-active`) | Auto-built tab bar |
+| `.TabPanel_Content` | Wraps the slotted pages |
+| `.TabPanel_Page` (`data-page`, `.-active`) | One per `vue-tabpanel-page` |
+
+Toggling uses the `-active` class, never `v-show`, so a CSS rule can hide `.TabPanel_Page` from the very first render. To avoid a flash of every page before Vue mounts, hide the raw element upfront: `vue-tabpanel { display: none; }`.
+
 #### LockWrapper (`vue-lock-wrapper`)
 
 Locks/unlocks its content (e.g. a disabled form until the user explicitly unlocks it).
