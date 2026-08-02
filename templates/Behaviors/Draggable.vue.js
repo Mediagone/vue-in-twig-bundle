@@ -180,7 +180,27 @@
                 if (!this.isCompatible()) return;
                 event.preventDefault(); // required to allow a drop
                 event.dataTransfer.dropEffect = 'move';
-                this.showIndicator(this.dropIndex(event));
+
+                const index = this.dropIndex(event);
+
+                // Both boundaries of the dragged row itself are no-ops when re-ordering within
+                // the same list: onDrop() maps `fromIndex` and `fromIndex + 1` back to the same
+                // position. Showing an indicator there promises a move that will not happen —
+                // most visible with `use-placeholder`, where a gap opens right above and right
+                // below the row being dragged.
+                if (this.isNoOpDrop(index)) {
+                    this.clearIndicator();
+                    return;
+                }
+
+                this.showIndicator(index);
+            },
+            // Whether dropping at `index` would leave the list unchanged (see onDragOver). Only
+            // an internal re-order can be a no-op: a move from another list always inserts.
+            isNoOpDrop(index) {
+                if (activeDrag === null || activeDrag.source !== this) return false;
+
+                return index === activeDrag.fromIndex || index === activeDrag.fromIndex + 1;
             },
             onDragLeave(event) {
                 // Only clear when the pointer actually leaves this list (not on inner boundaries).
@@ -199,6 +219,11 @@
                 if (drag.source === this) {
                     // Re-order within the same list.
                     if (!this.sort) return;
+
+                    // Released on one of the dragged row's own boundaries: nothing moves, so emit
+                    // nothing — `@change` stays a reliable signal that the order actually changed
+                    // (no indicator is shown there either, see onDragOver).
+                    if (this.isNoOpDrop(toIndex)) return;
 
                     const next = this.modelValue.slice();
                     next.splice(drag.fromIndex, 1);
